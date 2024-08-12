@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Japanese Audio Transcription</title>
+</head>
+<body>
+    <h1>Upload an audio file for transcription</h1>
+    <form id="upload-form" enctype="multipart/form-data">
+        <input type="file" id="audio-file" name="audio" accept="audio/*">
+        <button type="submit">Transcribe</button>
+    </form>
+    <div id="transcription-result"></div>
+
+    <script>
+        const form = document.getElementById('upload-form');
+        const resultDiv = document.getElementById('transcription-result');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(form);
+
+            const response = await fetch('/transcribe', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            if (data.error) {
+                resultDiv.textContent = data.error;
+            } else {
+                resultDiv.textContent = data.transcription;
+            }
+        });
+    </script>
+</body>
+</html>
